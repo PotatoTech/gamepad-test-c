@@ -6,12 +6,42 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-int main(void) {
+#define MAYBE_UNUSED(x) ((void) x)
+
+int main(int argc, char* argv[]) {
+    MAYBE_UNUSED(argc);
+    MAYBE_UNUSED(argv);
+
     if (SDL_Init(SDL_INIT_GAMECONTROLLER)) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
     atexit(SDL_Quit);
+
+    {
+        const char* controller_config_env_var = "SDL_GAMECONTROLLERCONFIG";
+        char* mapping = getenv(controller_config_env_var);
+        if (mapping) {
+            if (SDL_GameControllerAddMapping(mapping) < 0) {
+                fprintf(
+                    stderr,
+                    "Failed to load %s: %s\n",
+                    controller_config_env_var,
+                    SDL_GetError());
+            }
+        }
+
+        char* base_path = SDL_GetBasePath();
+        const char* mappings_file = "gamecontrollerdb.txt";
+        char* path_to_mappings = malloc(strlen(base_path) + strlen(mappings_file) + 1);
+        strcpy(path_to_mappings, base_path);
+        strcat(path_to_mappings, mappings_file);
+        if (SDL_GameControllerAddMappingsFromFile(path_to_mappings) < 0) {
+            fprintf(stderr, "Failed to load mappings file: %s\n", SDL_GetError());
+        }
+        free(path_to_mappings);
+        SDL_free(base_path);
+    }
 
     while (true) {
         SDL_Event e;

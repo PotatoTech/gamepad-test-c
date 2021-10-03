@@ -80,3 +80,13 @@ add_custom_command(
     TARGET ${PROJECT_NAME}
     PRE_LINK
     COMMAND ${CMAKE_COMMAND} -E make_directory ${runtime_output_dir})
+
+# Copy the game controller mappings into bin at build time.
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND
+        ${CMAKE_COMMAND} -E copy
+        ${PROJECT_SOURCE_DIR}/submodules/SDL_GameControllerDB/gamecontrollerdb.txt
+        ${runtime_output_dir}
+    COMMENT "Copying game controller mappings")

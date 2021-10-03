@@ -1,3 +1,6 @@
 [submodule "submodules/sdl2-cmake-modules"]
 	path = submodules/sdl2-cmake-modules
 	url = ../../aminosbh/sdl2-cmake-modules.git
+[submodule "submodules/SDL_GameControllerDB"]
+	path = submodules/SDL_GameControllerDB
+	url = ../../gabomdq/SDL_GameControllerDB.git
