@@ -13,33 +13,40 @@ int main(void) {
     }
     atexit(SDL_Quit);
 
-    int num_joysticks = SDL_NumJoysticks();
-    if (num_joysticks < 0) {
-        fprintf(stderr, "Could not detect number of joysticks: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_GameController** gamepads = malloc(sizeof gamepads * (size_t) num_joysticks);
-    if (!gamepads) {
-        fprintf(stderr, "Could not allocate memory for game controller handles\n");
-        return 1;
-    }
-
-    // Gamepads which are already connected when the program starts will not produce
-    // the SDL_CONTROLLERDEVICEADDED event, so we must iterate over them.
-    for (int i = 0; i < num_joysticks; ++i) {
-        gamepads[i] = SDL_GameControllerOpen(i);
-        if (gamepads[i]) {
-            printf("Opened game controller %i\n", i);
-        } else {
-            fprintf(stderr, "Could not open game controller %i: %s\n", i, SDL_GetError());
-        }
-    }
-
     while (true) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
+            case SDL_CONTROLLERDEVICEADDED: {
+                SDL_GameController* gamepad = SDL_GameControllerOpen(e.cdevice.which);
+                if (gamepad) {
+                    // The device ID is not necessarily the same as the ID reported in
+                    // future controller events.
+                    SDL_Joystick* js = SDL_GameControllerGetJoystick(gamepad);
+                    printf("Added gamepad %i\n", SDL_JoystickInstanceID(js));
+                } else {
+                    fprintf(
+                        stderr,
+                        "Could not open device %i: %s\n",
+                        e.cdevice.which,
+                        SDL_GetError());
+                }
+                break;
+            }
+            case SDL_CONTROLLERDEVICEREMOVED: {
+                SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(e.cdevice.which);
+                if (gamepad) {
+                    SDL_GameControllerClose(gamepad);
+                    printf("Removed gamepad %i\n", e.cdevice.which);
+                } else {
+                    fprintf(
+                        stderr,
+                        "Could not close handle for gamepad %i: %s\n",
+                        e.cdevice.which,
+                        SDL_GetError());
+                }
+                break;
+            }
             case SDL_CONTROLLERAXISMOTION:
                 printf("id %i: axis %u = %i\n", e.caxis.which, e.caxis.axis, e.caxis.value);
                 break;
