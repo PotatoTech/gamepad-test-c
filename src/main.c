@@ -8,6 +8,39 @@
 
 #define MAYBE_UNUSED(x) ((void) x)
 
+const char* get_axis_name(SDL_GameControllerAxis axis) {
+    switch (axis) {
+    case SDL_CONTROLLER_AXIS_LEFTX: return "LeftX";
+    case SDL_CONTROLLER_AXIS_LEFTY: return "LeftY";
+    case SDL_CONTROLLER_AXIS_RIGHTX: return "RightX";
+    case SDL_CONTROLLER_AXIS_RIGHTY: return "RightY";
+    case SDL_CONTROLLER_AXIS_TRIGGERLEFT: return "TriggerLeft";
+    case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: return "TriggerRight";
+    default: return "Unknown";
+    }
+}
+
+const char* get_button_name(SDL_GameControllerButton button) {
+    switch (button) {
+    case SDL_CONTROLLER_BUTTON_A: return "A";
+    case SDL_CONTROLLER_BUTTON_B: return "B";
+    case SDL_CONTROLLER_BUTTON_X: return "X";
+    case SDL_CONTROLLER_BUTTON_Y: return "Y";
+    case SDL_CONTROLLER_BUTTON_BACK: return "Back";
+    case SDL_CONTROLLER_BUTTON_GUIDE: return "Guide";
+    case SDL_CONTROLLER_BUTTON_START: return "Start";
+    case SDL_CONTROLLER_BUTTON_LEFTSTICK: return "LeftStick";
+    case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return "RightStick";
+    case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return "LeftShoulder";
+    case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return "RightShoulder";
+    case SDL_CONTROLLER_BUTTON_DPAD_UP: return "DpadUp";
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN: return "DpadDown";
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT: return "DpadLeft";
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: return "DpadRight";
+    default: return "Unknown";
+    }
+}
+
 int main(int argc, char* argv[]) {
     MAYBE_UNUSED(argc);
     MAYBE_UNUSED(argv);
@@ -78,13 +111,23 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case SDL_CONTROLLERAXISMOTION:
-                printf("id %i: axis %u = %i\n", e.caxis.which, e.caxis.axis, e.caxis.value);
+                printf(
+                    "id %i: axis %s = %i\n",
+                    e.caxis.which,
+                    get_axis_name(e.caxis.axis),
+                    e.caxis.value);
                 break;
             case SDL_CONTROLLERBUTTONDOWN:
-                printf("id %i: button %u = down\n", e.cbutton.which, e.cbutton.button);
+                printf(
+                    "id %i: button %s = down\n",
+                    e.cbutton.which,
+                    get_button_name(e.cbutton.button));
                 break;
             case SDL_CONTROLLERBUTTONUP:
-                printf("id %i: button %u = up\n", e.cbutton.which, e.cbutton.button);
+                printf(
+                    "id %i: button %s = up\n",
+                    e.cbutton.which,
+                    get_button_name(e.cbutton.button));
                 break;
             case SDL_QUIT: return 0;
             }
