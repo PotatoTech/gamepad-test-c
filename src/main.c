@@ -57,18 +57,6 @@ int main(int argc, char* argv[]) {
     atexit(SDL_Quit);
 
     {
-        const char* controller_config_env_var = "SDL_GAMECONTROLLERCONFIG";
-        char* mapping = getenv(controller_config_env_var);
-        if (mapping) {
-            if (SDL_GameControllerAddMapping(mapping) < 0) {
-                fprintf(
-                    stderr,
-                    "Failed to load %s: %s\n",
-                    controller_config_env_var,
-                    SDL_GetError());
-            }
-        }
-
         char* base_path = SDL_GetBasePath();
         const char* mappings_file = "gamecontrollerdb.txt";
         char* path_to_mappings = malloc(strlen(base_path) + strlen(mappings_file) + 1);
