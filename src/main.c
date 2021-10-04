@@ -6,8 +6,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAYBE_UNUSED(x) ((void) x)
-
 const char* get_axis_name(SDL_GameControllerAxis axis) {
     switch (axis) {
     case SDL_CONTROLLER_AXIS_LEFTX: return "LeftX";
@@ -42,8 +40,15 @@ const char* get_button_name(SDL_GameControllerButton button) {
 }
 
 int main(int argc, char* argv[]) {
-    MAYBE_UNUSED(argc);
-    MAYBE_UNUSED(argv);
+    bool show_mappings = false;
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "--show-mappings") == 0) {
+            show_mappings = true;
+        } else {
+            fprintf(stderr, "%s: unknown argument '%s'\n", argv[0], argv[i]);
+            return 1;
+        }
+    }
 
     if (SDL_Init(SDL_INIT_GAMECONTROLLER)) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
@@ -87,6 +92,13 @@ int main(int argc, char* argv[]) {
                     // future controller events.
                     SDL_Joystick* js = SDL_GameControllerGetJoystick(gamepad);
                     printf("Added gamepad %i\n", SDL_JoystickInstanceID(js));
+                    if (show_mappings) {
+                        char* mapping = SDL_GameControllerMapping(gamepad);
+                        if (mapping) {
+                            printf("mapping: %s\n", mapping);
+                        }
+                        SDL_free(mapping);
+                    }
                 } else {
                     fprintf(
                         stderr,
