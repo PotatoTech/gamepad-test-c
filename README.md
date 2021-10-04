@@ -4,12 +4,18 @@
 
 Tests gamepads using SDL2's game controller API.
 
-This repository contains a submodule. When cloning, make sure to pass the `--recurse-submodules`
-flag, or the project will not compile.
-
 ## Prerequisites
 
 - [SDL2][sdl2-download]
+
+## Submodules
+
+To fetch the submodules, pass the `--recurse-submodules` flag when cloning.
+
+Alternatively, to fetch them after cloning:
+```sh
+git submodule update --init --recursive
+```
 
 ## Configuration
 
