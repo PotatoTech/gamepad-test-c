@@ -6,6 +6,48 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+void load_mappings_file(void) {
+    char* base_path = SDL_GetBasePath();
+    const char* mappings_file = "gamecontrollerdb.txt";
+    char* path_to_mappings = malloc(strlen(base_path) + strlen(mappings_file) + 1);
+    strcpy(path_to_mappings, base_path);
+    strcat(path_to_mappings, mappings_file);
+    if (SDL_GameControllerAddMappingsFromFile(path_to_mappings) < 0) {
+        fprintf(stderr, "Failed to load mappings file: %s\n", SDL_GetError());
+    }
+    free(path_to_mappings);
+    SDL_free(base_path);
+}
+
+void handle_gamepad_added(SDL_ControllerDeviceEvent e, bool show_mappings) {
+    SDL_GameController* gamepad = SDL_GameControllerOpen(e.which);
+    if (gamepad) {
+        // The device ID is not necessarily the same as the ID reported in
+        // future controller events.
+        SDL_Joystick* js = SDL_GameControllerGetJoystick(gamepad);
+        printf("Added gamepad %i\n", SDL_JoystickInstanceID(js));
+        if (show_mappings) {
+            char* mapping = SDL_GameControllerMapping(gamepad);
+            if (mapping) {
+                printf("mapping: %s\n", mapping);
+            }
+            SDL_free(mapping);
+        }
+    } else {
+        fprintf(stderr, "Could not open device %i: %s\n", e.which, SDL_GetError());
+    }
+}
+
+void handle_gamepad_removed(SDL_ControllerDeviceEvent e) {
+    SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(e.which);
+    if (gamepad) {
+        SDL_GameControllerClose(gamepad);
+        printf("Removed gamepad %i\n", e.which);
+    } else {
+        fprintf(stderr, "Could not close handle for gamepad %i: %s\n", e.which, SDL_GetError());
+    }
+}
+
 const char* get_axis_name(SDL_GameControllerAxis axis) {
     switch (axis) {
     case SDL_CONTROLLER_AXIS_LEFTX: return "LeftX";
@@ -39,6 +81,18 @@ const char* get_button_name(SDL_GameControllerButton button) {
     }
 }
 
+void handle_axis_motion(SDL_ControllerAxisEvent e) {
+    printf("id %i: axis %s = %i\n", e.which, get_axis_name(e.axis), e.value);
+}
+
+void handle_button(SDL_ControllerButtonEvent e) {
+    printf("id %i: button %s = ", e.which, get_button_name(e.button));
+    switch (e.state) {
+    case SDL_PRESSED: printf("down\n"); break;
+    case SDL_RELEASED: printf("up\n"); break;
+    }
+}
+
 int main(int argc, char* argv[]) {
     bool show_mappings = false;
     for (int i = 1; i < argc; ++i) {
@@ -56,79 +110,17 @@ int main(int argc, char* argv[]) {
     }
     atexit(SDL_Quit);
 
-    {
-        char* base_path = SDL_GetBasePath();
-        const char* mappings_file = "gamecontrollerdb.txt";
-        char* path_to_mappings = malloc(strlen(base_path) + strlen(mappings_file) + 1);
-        strcpy(path_to_mappings, base_path);
-        strcat(path_to_mappings, mappings_file);
-        if (SDL_GameControllerAddMappingsFromFile(path_to_mappings) < 0) {
-            fprintf(stderr, "Failed to load mappings file: %s\n", SDL_GetError());
-        }
-        free(path_to_mappings);
-        SDL_free(base_path);
-    }
+    load_mappings_file();
 
     while (true) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
-            case SDL_CONTROLLERDEVICEADDED: {
-                SDL_GameController* gamepad = SDL_GameControllerOpen(e.cdevice.which);
-                if (gamepad) {
-                    // The device ID is not necessarily the same as the ID reported in
-                    // future controller events.
-                    SDL_Joystick* js = SDL_GameControllerGetJoystick(gamepad);
-                    printf("Added gamepad %i\n", SDL_JoystickInstanceID(js));
-                    if (show_mappings) {
-                        char* mapping = SDL_GameControllerMapping(gamepad);
-                        if (mapping) {
-                            printf("mapping: %s\n", mapping);
-                        }
-                        SDL_free(mapping);
-                    }
-                } else {
-                    fprintf(
-                        stderr,
-                        "Could not open device %i: %s\n",
-                        e.cdevice.which,
-                        SDL_GetError());
-                }
-                break;
-            }
-            case SDL_CONTROLLERDEVICEREMOVED: {
-                SDL_GameController* gamepad = SDL_GameControllerFromInstanceID(e.cdevice.which);
-                if (gamepad) {
-                    SDL_GameControllerClose(gamepad);
-                    printf("Removed gamepad %i\n", e.cdevice.which);
-                } else {
-                    fprintf(
-                        stderr,
-                        "Could not close handle for gamepad %i: %s\n",
-                        e.cdevice.which,
-                        SDL_GetError());
-                }
-                break;
-            }
-            case SDL_CONTROLLERAXISMOTION:
-                printf(
-                    "id %i: axis %s = %i\n",
-                    e.caxis.which,
-                    get_axis_name(e.caxis.axis),
-                    e.caxis.value);
-                break;
+            case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, show_mappings); break;
+            case SDL_CONTROLLERDEVICEREMOVED: handle_gamepad_removed(e.cdevice); break;
+            case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis); break;
             case SDL_CONTROLLERBUTTONDOWN:
-                printf(
-                    "id %i: button %s = down\n",
-                    e.cbutton.which,
-                    get_button_name(e.cbutton.button));
-                break;
-            case SDL_CONTROLLERBUTTONUP:
-                printf(
-                    "id %i: button %s = up\n",
-                    e.cbutton.which,
-                    get_button_name(e.cbutton.button));
-                break;
+            case SDL_CONTROLLERBUTTONUP: handle_button(e.cbutton); break;
             case SDL_QUIT: return 0;
             }
         }
