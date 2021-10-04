@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         if (strcmp(argv[i], "--show-mappings") == 0) {
             show_mappings = true;
         } else {
-            fprintf(stderr, "%s: unknown argument '%s'\n", argv[0], argv[i]);
+            fprintf(stderr, "Usage: %s [--show-mappings]\n", argv[0]);
             return 1;
         }
     }
