@@ -73,10 +73,10 @@ const char* get_button_name(SDL_GameControllerButton button) {
     case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return "RightStick";
     case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return "LeftShoulder";
     case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return "RightShoulder";
-    case SDL_CONTROLLER_BUTTON_DPAD_UP: return "DpadUp";
-    case SDL_CONTROLLER_BUTTON_DPAD_DOWN: return "DpadDown";
-    case SDL_CONTROLLER_BUTTON_DPAD_LEFT: return "DpadLeft";
-    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: return "DpadRight";
+    case SDL_CONTROLLER_BUTTON_DPAD_UP: return "DPadUp";
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN: return "DPadDown";
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT: return "DPadLeft";
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: return "DPadRight";
     default: return "Unknown";
     }
 }
