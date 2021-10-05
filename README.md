@@ -40,4 +40,3 @@ See [LICENSE][license-url] for more information.
 [license-url]: LICENSE
 
 [sdl2-download]: https://www.libsdl.org/download-2.0.php
-[visual-studio-generators]: https://cmake.org/cmake/help/v3.14/manual/cmake-generators.7.html#visual-studio-generators
