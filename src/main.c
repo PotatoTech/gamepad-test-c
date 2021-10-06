@@ -7,17 +7,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-void load_mappings_file(void) {
-    char* base_path = SDL_GetBasePath();
-    const char* mappings_file = "gamecontrollerdb.txt";
-    char* path_to_mappings = malloc(strlen(base_path) + strlen(mappings_file) + 1);
-    strcpy(path_to_mappings, base_path);
-    strcat(path_to_mappings, mappings_file);
+void load_mappings_file(const char* path_to_mappings) {
     if (SDL_GameControllerAddMappingsFromFile(path_to_mappings) < 0) {
         fprintf(stderr, "Failed to load mappings file: %s\n", SDL_GetError());
     }
-    free(path_to_mappings);
-    SDL_free(base_path);
 }
 
 void handle_gamepad_added(SDL_ControllerDeviceEvent e, bool show_mappings) {
@@ -102,6 +95,7 @@ void handle_button(SDL_ControllerButtonEvent e) {
 
 int main(int argc, const char* argv[]) {
     bool debug = false;
+    const char* path_to_mappings = NULL;
     struct argparse_option options[] = {
         OPT_HELP(),
         OPT_BOOLEAN(
@@ -109,6 +103,11 @@ int main(int argc, const char* argv[]) {
             "debug",
             &debug,
             "show the mapping used by each controller when it is added"),
+        OPT_STRING(
+            'm',
+            "mappings-file",
+            &path_to_mappings,
+            "load the mappings from the specified file"),
         OPT_END(),
     };
 
@@ -127,7 +126,9 @@ int main(int argc, const char* argv[]) {
     }
     atexit(SDL_Quit);
 
-    load_mappings_file();
+    if (path_to_mappings) {
+        load_mappings_file(path_to_mappings);
+    }
 
     while (true) {
         SDL_Event e;
