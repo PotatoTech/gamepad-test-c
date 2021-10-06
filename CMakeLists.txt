@@ -28,9 +28,13 @@ foreach(output_config ${CMAKE_CONFIGURATION_TYPES})
                                                      "${PROJECT_BINARY_DIR}/bin")
 endforeach()
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/submodules/sdl2-cmake-modules/)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/submodules/sdl2-cmake-modules)
 find_package(SDL2 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::Main)
+
+add_subdirectory(submodules/argparse)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/submodules/argparse)
+target_link_libraries(${PROJECT_NAME} PRIVATE argparse)
 
 target_sources(${PROJECT_NAME} PRIVATE src/main.c)
 

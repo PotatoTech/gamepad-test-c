@@ -2,6 +2,7 @@
 // Copyright (c) 2021 PotatoTech
 
 #include "SDL.h"
+#include "argparse.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -99,16 +100,26 @@ void handle_button(SDL_ControllerButtonEvent e) {
     }
 }
 
-int main(int argc, char* argv[]) {
-    bool show_mappings = false;
-    for (int i = 1; i < argc; ++i) {
-        if (strcmp(argv[i], "--show-mappings") == 0) {
-            show_mappings = true;
-        } else {
-            fprintf(stderr, "Usage: %s [--show-mappings]\n", argv[0]);
-            return 1;
-        }
-    }
+int main(int argc, const char* argv[]) {
+    bool debug = false;
+    struct argparse_option options[] = {
+        OPT_HELP(),
+        OPT_BOOLEAN(
+            'd',
+            "debug",
+            &debug,
+            "show the mapping used by each controller when it is added"),
+        OPT_END(),
+    };
+
+    const char* const usage[] = {
+        "gamepad-test-c [options]",
+        NULL,
+    };
+
+    struct argparse parser;
+    argparse_init(&parser, options, usage, 0);
+    argc = argparse_parse(&parser, argc, argv);
 
     if (SDL_Init(SDL_INIT_GAMECONTROLLER)) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
@@ -122,7 +133,7 @@ int main(int argc, char* argv[]) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
-            case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, show_mappings); break;
+            case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, debug); break;
             case SDL_CONTROLLERDEVICEREMOVED: handle_gamepad_removed(e.cdevice); break;
             case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis); break;
             case SDL_CONTROLLERBUTTONDOWN:

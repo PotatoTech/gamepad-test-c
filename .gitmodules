@@ -4,3 +4,6 @@
 [submodule "submodules/SDL_GameControllerDB"]
 	path = submodules/SDL_GameControllerDB
 	url = ../../gabomdq/SDL_GameControllerDB.git
+[submodule "submodules/argparse"]
+	path = submodules/argparse
+	url = ../../cofyc/argparse.git
