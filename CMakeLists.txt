@@ -13,12 +13,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
     )
 endif()
 
-# If building on Windows, do not build as a console application.
-if(WIN32)
-    add_executable(${PROJECT_NAME} WIN32 "")
-else()
-    add_executable(${PROJECT_NAME} "")
-endif()
+add_executable(${PROJECT_NAME} "")
 
 set_target_properties(
     ${PROJECT_NAME}
