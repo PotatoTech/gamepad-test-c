@@ -77,6 +77,12 @@ const char* get_button_name(SDL_GameControllerButton button) {
     case SDL_CONTROLLER_BUTTON_DPAD_DOWN: return "DPadDown";
     case SDL_CONTROLLER_BUTTON_DPAD_LEFT: return "DPadLeft";
     case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: return "DPadRight";
+    case SDL_CONTROLLER_BUTTON_MISC1: return "Misc1";
+    case SDL_CONTROLLER_BUTTON_PADDLE1: return "Paddle1";
+    case SDL_CONTROLLER_BUTTON_PADDLE2: return "Paddle2";
+    case SDL_CONTROLLER_BUTTON_PADDLE3: return "Paddle3";
+    case SDL_CONTROLLER_BUTTON_PADDLE4: return "Paddle4";
+    case SDL_CONTROLLER_BUTTON_TOUCHPAD: return "Touchpad";
     default: return "Unknown";
     }
 }
