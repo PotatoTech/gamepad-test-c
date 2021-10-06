@@ -102,12 +102,18 @@ int main(int argc, const char* argv[]) {
             'd',
             "debug",
             &debug,
-            "show the mapping used by each controller when it is added"),
+            "show the mapping used by each controller when it is added",
+            NULL,
+            0,
+            0),
         OPT_STRING(
             'm',
             "mappings-file",
             &path_to_mappings,
-            "load the mappings from the specified file"),
+            "load the mappings from the specified file",
+            NULL,
+            0,
+            0),
         OPT_END(),
     };
 
