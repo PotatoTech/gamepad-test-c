@@ -94,23 +94,23 @@ void handle_button(SDL_ControllerButtonEvent e) {
 }
 
 int main(int argc, const char* argv[]) {
-    bool debug = false;
+    bool verbose = false;
     const char* path_to_mappings = NULL;
     struct argparse_option options[] = {
         OPT_HELP(),
-        OPT_BOOLEAN(
-            'd',
-            "debug",
-            &debug,
-            "show the mapping used by each controller when it is added",
-            NULL,
-            0,
-            0),
         OPT_STRING(
             'm',
             "mappings-file",
             &path_to_mappings,
             "load the mappings from the specified file",
+            NULL,
+            0,
+            0),
+        OPT_BOOLEAN(
+            'v',
+            "verbose",
+            &verbose,
+            "show the mapping used by each controller when it is added",
             NULL,
             0,
             0),
@@ -140,7 +140,7 @@ int main(int argc, const char* argv[]) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
-            case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, debug); break;
+            case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, verbose); break;
             case SDL_CONTROLLERDEVICEREMOVED: handle_gamepad_removed(e.cdevice); break;
             case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis); break;
             case SDL_CONTROLLERBUTTONDOWN:
