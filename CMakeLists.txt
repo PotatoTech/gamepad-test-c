@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::Main)
 
 option(ARGPARSE_SHARED "" OFF)
 add_subdirectory(submodules/argparse)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/submodules/argparse)
+target_include_directories(${PROJECT_NAME} PRIVATE submodules/argparse)
 target_link_libraries(${PROJECT_NAME} PRIVATE argparse)
 
 target_sources(${PROJECT_NAME} PRIVATE src/main.c src/gamepad.c src/parser.c)
