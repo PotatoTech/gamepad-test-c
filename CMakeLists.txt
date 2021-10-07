@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(gamepad-test-c LANGUAGES C)
+project(gamepad-test LANGUAGES C)
 
 # Require out-of-source builds.
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)

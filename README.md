@@ -30,7 +30,7 @@ export SDL_GAMECONTROLLERCONFIG="03000000790000001100000010010000,Retrolink SNES
 
 Copyright &#x00A9; 2021 PotatoTech
 
-gamepad-test-c is licensed under the Apache 2.0 license.
+gamepad-test is licensed under the Apache 2.0 license.
 See [LICENSE][license-url] for more information.
 
 

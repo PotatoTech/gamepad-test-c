@@ -118,7 +118,7 @@ int main(int argc, const char* argv[]) {
     };
 
     const char* const usage[] = {
-        "gamepad-test-c [options]",
+        "gamepad-test [options]",
         NULL,
     };
 
