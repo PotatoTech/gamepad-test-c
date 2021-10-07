@@ -100,7 +100,7 @@ int main(int argc, const char* argv[]) {
         OPT_HELP(),
         OPT_STRING(
             'm',
-            "mappings-file",
+            "mappings",
             &path_to_mappings,
             "load the mappings from the specified file",
             NULL,
