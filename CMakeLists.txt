@@ -37,7 +37,7 @@ add_subdirectory(submodules/argparse)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/submodules/argparse)
 target_link_libraries(${PROJECT_NAME} PRIVATE argparse)
 
-target_sources(${PROJECT_NAME} PRIVATE src/main.c)
+target_sources(${PROJECT_NAME} PRIVATE src/main.c src/gamepad.c)
 
 # Set compiler warnings.
 if(MSVC)
