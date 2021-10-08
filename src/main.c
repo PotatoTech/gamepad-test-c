@@ -5,7 +5,9 @@
 #include "gamepad.h"
 #include "parser.h"
 
+#include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 int main(int argc, const char* argv[]) {
@@ -17,8 +19,9 @@ int main(int argc, const char* argv[]) {
     }
     atexit(SDL_Quit);
 
+    uint16_t deadzone = (uint16_t) abs((int32_t) args.deadzone);
     if (args.verbose) {
-        printf("Deadzone: %i\n", args.deadzone);
+        printf("Deadzone: %u\n", deadzone);
     }
 
     if (args.mappings) {
@@ -31,7 +34,7 @@ int main(int argc, const char* argv[]) {
             switch (e.type) {
             case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, args.verbose); break;
             case SDL_CONTROLLERDEVICEREMOVED: handle_gamepad_removed(e.cdevice); break;
-            case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis, args.deadzone); break;
+            case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis, deadzone); break;
             case SDL_CONTROLLERBUTTONDOWN:
             case SDL_CONTROLLERBUTTONUP: handle_button(e.cbutton); break;
             case SDL_QUIT: return 0;

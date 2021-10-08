@@ -73,8 +73,8 @@ const char* get_button_name(SDL_GameControllerButton button) {
     }
 }
 
-void handle_axis_motion(SDL_ControllerAxisEvent e, int16_t deadzone) {
-    if (deadzone == 0 || abs((int32_t) deadzone) < abs((int32_t) e.value)) {
+void handle_axis_motion(SDL_ControllerAxisEvent e, uint16_t deadzone) {
+    if (deadzone == 0 || deadzone < (uint16_t) abs((int32_t) e.value)) {
         printf("id %i: axis %s = %i\n", e.which, get_axis_name(e.axis), e.value);
     }
 }
