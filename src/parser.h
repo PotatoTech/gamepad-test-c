@@ -5,9 +5,11 @@
 #define PARSER_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct Options {
     const char* mappings;
+    int16_t deadzone;
     bool verbose;
 } Options;
 

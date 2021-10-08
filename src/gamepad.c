@@ -3,6 +3,8 @@
 
 #include "gamepad.h"
 
+#include <math.h>
+
 void handle_gamepad_added(SDL_ControllerDeviceEvent e, bool show_mappings) {
     SDL_GameController* gamepad = SDL_GameControllerOpen(e.which);
     if (gamepad) {
@@ -71,8 +73,10 @@ const char* get_button_name(SDL_GameControllerButton button) {
     }
 }
 
-void handle_axis_motion(SDL_ControllerAxisEvent e) {
-    printf("id %i: axis %s = %i\n", e.which, get_axis_name(e.axis), e.value);
+void handle_axis_motion(SDL_ControllerAxisEvent e, int16_t deadzone) {
+    if (deadzone == 0 || abs((int32_t) deadzone) < abs((int32_t) e.value)) {
+        printf("id %i: axis %s = %i\n", e.which, get_axis_name(e.axis), e.value);
+    }
 }
 
 void handle_button(SDL_ControllerButtonEvent e) {

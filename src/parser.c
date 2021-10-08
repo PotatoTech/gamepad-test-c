@@ -5,12 +5,12 @@
 
 #include "argparse.h"
 
-#include <stdbool.h>
 #include <stddef.h>
 
 Options parse_arguments(int argc, const char* argv[]) {
     Options args = {
         NULL,
+        0,
         false,
     };
 
@@ -24,6 +24,7 @@ Options parse_arguments(int argc, const char* argv[]) {
             NULL,
             0,
             0),
+        OPT_INTEGER(0, "deadzone", &args.deadzone, "set the deadzone for gamepad axes", NULL, 0, 0),
         OPT_BOOLEAN(
             'v',
             "verbose",

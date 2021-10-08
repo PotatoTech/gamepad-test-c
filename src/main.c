@@ -17,6 +17,10 @@ int main(int argc, const char* argv[]) {
     }
     atexit(SDL_Quit);
 
+    if (args.verbose) {
+        printf("Deadzone: %i\n", args.deadzone);
+    }
+
     if (args.mappings) {
         load_mappings(args.mappings);
     }
@@ -27,7 +31,7 @@ int main(int argc, const char* argv[]) {
             switch (e.type) {
             case SDL_CONTROLLERDEVICEADDED: handle_gamepad_added(e.cdevice, args.verbose); break;
             case SDL_CONTROLLERDEVICEREMOVED: handle_gamepad_removed(e.cdevice); break;
-            case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis); break;
+            case SDL_CONTROLLERAXISMOTION: handle_axis_motion(e.caxis, args.deadzone); break;
             case SDL_CONTROLLERBUTTONDOWN:
             case SDL_CONTROLLERBUTTONUP: handle_button(e.cbutton); break;
             case SDL_QUIT: return 0;
