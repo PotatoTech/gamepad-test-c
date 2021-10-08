@@ -5,7 +5,7 @@
 
 #include "argparse.h"
 
-#include <stddef.h>
+#include <stdlib.h>
 
 Options parse_arguments(int argc, const char* argv[]) {
     Options args = {
@@ -13,6 +13,7 @@ Options parse_arguments(int argc, const char* argv[]) {
         0,
         false,
     };
+    int32_t deadzone = 0;
 
     struct argparse_option options[] = {
         OPT_HELP(),
@@ -24,7 +25,7 @@ Options parse_arguments(int argc, const char* argv[]) {
             NULL,
             0,
             0),
-        OPT_INTEGER(0, "deadzone", &args.deadzone, "set the deadzone for gamepad axes", NULL, 0, 0),
+        OPT_INTEGER(0, "deadzone", &deadzone, "set the deadzone for gamepad axes", NULL, 0, 0),
         OPT_BOOLEAN(
             'v',
             "verbose",
@@ -43,7 +44,13 @@ Options parse_arguments(int argc, const char* argv[]) {
 
     struct argparse parser;
     argparse_init(&parser, options, usage, 0);
-    argc = argparse_parse(&parser, argc, argv);
+    argparse_parse(&parser, argc, argv);
+
+    if (deadzone < INT16_MIN + 1 || deadzone > INT16_MAX) {
+        args.deadzone = INT16_MAX + 1;
+    } else {
+        args.deadzone = (uint16_t) abs(deadzone);
+    }
 
     return args;
 }
